@@ -1,0 +1,14 @@
+---
+- name: Atualizar sistema Linux
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Atualizar lista de pacotes
+      package:
+        name: "*"
+        state: latest
+      when: 
+        - ansible_pkg_mgr == 'apt'  # Para sistemas baseados em Debian/Ubuntu
+        - ansible_pkg_mgr == 'dnf'  # Para sistemas baseados em Fedora
+        - ansible_pkg_mgr == 'yum'  # Para sistemas baseados em CentOS
