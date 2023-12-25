@@ -1,24 +1,28 @@
 ---
 - name: Atualizar sistema Linux
-  hosts: all
+  hosts: seus_servidores
   become: yes
 
   tasks:
     - name: Listar pacotes atualizáveis (APENAS PARA APT)
       command: apt list --upgradable
       register: pacotes_atualizaveis
-      when: ansible_pkg_mgr == 'apt'
+      when: 
+        - ansible_pkg_mgr == 'apt'
+        - "'apt' in ansible_playbook_python"
 
     - name: Debug - Mostrar pacotes atualizáveis
       debug:
         var: pacotes_atualizaveis.stdout_lines
-      when: ansible_pkg_mgr == 'apt'
+      when: 
+        - ansible_pkg_mgr == 'apt'
+        - "'apt' in ansible_playbook_python"
 
     - name: Atualizar lista de pacotes
       package:
         name: "*"
         state: latest
       when: 
-        - ansible_pkg_mgr == 'apt'  # Para sistemas baseados em Debian/Ubuntu
-        - ansible_pkg_mgr == 'dnf'  # Para sistemas baseados em Fedora
-        - ansible_pkg_mgr == 'yum'  # Para sistemas baseados em CentOS
+        - ansible_pkg_mgr == 'apt'
+        - ansible_pkg_mgr == 'dnf'
+        - ansible_pkg_mgr == 'yum'

@@ -7,33 +7,33 @@
     - name: Atualizar lista de pacotes
       apt:
         update_cache: yes
-      when: ansible_pkg_mgr == 'apt'  # Para sistemas baseados em Debian/Ubuntu
+      when: ansible_pkg_mgr == 'apt'
 
     - name: Atualizar todos os pacotes
       package:
         name: "*"
         state: latest
-      when: ansible_pkg_mgr == 'apt'  # Para sistemas baseados em Debian/Ubuntu
+      when: ansible_pkg_mgr == 'apt'
 
     - name: Atualizar lista de pacotes
       dnf:
         update_cache: yes
-      when: ansible_pkg_mgr == 'dnf'  # Para sistemas baseados em Fedora
+      when: ansible_pkg_mgr == 'dnf'
 
     - name: Atualizar todos os pacotes
       dnf:
         name: "*"
         state: latest
-      when: ansible_pkg_mgr == 'dnf'  # Para sistemas baseados em Fedora
+      when: ansible_pkg_mgr == 'dnf'
 
     - name: Atualizar lista de pacotes
       yum:
         name: "*"
         state: latest
-      when: ansible_pkg_mgr == 'yum'  # Para sistemas baseados em CentOS
+      when: ansible_pkg_mgr == 'yum'
 
     - name: Atualizar todos os pacotes
       yum:
         name: "*"
         state: latest
-      when: ansible_pkg_mgr == 'yum'  # Para sistemas baseados em CentOS
+      when: ansible_pkg_mgr == 'yum'
