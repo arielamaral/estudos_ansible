@@ -1,5 +1,7 @@
 ---
 - name: Atualizar sistema Linux
+  hosts: all
+  become: yes
 
   tasks:
     - name: Atualizar lista de pacotes
