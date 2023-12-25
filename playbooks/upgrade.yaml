@@ -1,6 +1,6 @@
 ---
 - name: Atualizar sistema Linux
-  hosts: seus_servidores
+  hosts: all
   become: yes
 
   tasks:
