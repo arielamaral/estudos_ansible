@@ -4,20 +4,6 @@
   become: yes
 
   tasks:
-    - name: Listar pacotes atualizáveis (APENAS PARA APT)
-      command: apt list --upgradable
-      register: pacotes_atualizaveis
-      when: 
-        - ansible_pkg_mgr == 'apt'
-        - "'apt' in ansible_playbook_python"
-
-    - name: Debug - Mostrar pacotes atualizáveis
-      debug:
-        var: pacotes_atualizaveis.stdout_lines
-      when: 
-        - ansible_pkg_mgr == 'apt'
-        - "'apt' in ansible_playbook_python"
-
     - name: Atualizar lista de pacotes
       package:
         name: "*"

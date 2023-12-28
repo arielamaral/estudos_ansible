@@ -4,36 +4,30 @@
   become: yes
 
   tasks:
+    - name: Forçar fechamento de locks pendentes
+      shell: fuser -vki /var/lib/dpkg/lock-frontend
+      become: yes
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: Listar pacotes atualizáveis (APENAS PARA APT)
+      command: apt list --upgradable
+      register: pacotes_atualizaveis
+      ignore_errors: yes
+      when: 
+        - ansible_pkg_mgr == 'apt'
+        - "'apt' in ansible_playbook_python"
+
+    - name: Debug - Mostrar pacotes atualizáveis
+      debug:
+        var: pacotes_atualizaveis.stdout_lines
+      when: 
+        - ansible_pkg_mgr == 'apt'
+        - "'apt' in ansible_playbook_python"
+
     - name: Atualizar lista de pacotes
       apt:
         update_cache: yes
-      when: ansible_pkg_mgr == 'apt'
-
-    - name: Atualizar todos os pacotes
-      package:
-        name: "*"
-        state: latest
-      when: ansible_pkg_mgr == 'apt'
-
-    - name: Atualizar lista de pacotes
-      dnf:
-        update_cache: yes
-      when: ansible_pkg_mgr == 'dnf'
-
-    - name: Atualizar todos os pacotes
-      dnf:
-        name: "*"
-        state: latest
-      when: ansible_pkg_mgr == 'dnf'
-
-    - name: Atualizar lista de pacotes
-      yum:
-        name: "*"
-        state: latest
-      when: ansible_pkg_mgr == 'yum'
-
-    - name: Atualizar todos os pacotes
-      yum:
-        name: "*"
-        state: latest
-      when: ansible_pkg_mgr == 'yum'
+      when: 
+        - ansible_pkg_mgr == 'apt'
+        - ansible_pkg_mgr == 'dnf'
+        - ansible_pkg_mgr == 'yum'
