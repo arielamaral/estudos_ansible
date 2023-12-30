@@ -5,29 +5,24 @@
 
   tasks:
     - name: Forçar fechamento de locks pendentes
-      shell: fuser -vki /var/lib/dpkg/lock-frontend
+      shell: "{{ item }}"
       become: yes
+      loop:
+        - fuser -vki /var/lib/dpkg/lock-frontend
       when: ansible_pkg_mgr == 'apt'
 
     - name: Listar pacotes atualizáveis (APENAS PARA APT)
       command: apt list --upgradable
       register: pacotes_atualizaveis
       ignore_errors: yes
-      when: 
-        - ansible_pkg_mgr == 'apt'
-        - "'apt' in ansible_playbook_python"
+      when: ansible_pkg_mgr == 'apt' and 'apt' in ansible_playbook_python
 
     - name: Debug - Mostrar pacotes atualizáveis
       debug:
         var: pacotes_atualizaveis.stdout_lines
-      when: 
-        - ansible_pkg_mgr == 'apt'
-        - "'apt' in ansible_playbook_python"
+      when: ansible_pkg_mgr == 'apt' and 'apt' in ansible_playbook_python
 
     - name: Atualizar lista de pacotes
       apt:
         update_cache: yes
-      when: 
-        - ansible_pkg_mgr == 'apt'
-        - ansible_pkg_mgr == 'dnf'
-        - ansible_pkg_mgr == 'yum'
+      when: ansible_pkg_mgr in ['apt', 'dnf', 'yum']
